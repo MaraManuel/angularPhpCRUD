@@ -1,3 +1,4 @@
+import { CrudService } from './../crud.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http'; 
 import { AgGridAngular } from 'ag-grid-angular';
@@ -28,6 +29,9 @@ export class ProductListComponent {
       { make: 'Porsche', model: 'Boxter', price: 7200},
     ];
 
+    constructor( private crudService : CrudService){
+
+    }
 
   
     /*
