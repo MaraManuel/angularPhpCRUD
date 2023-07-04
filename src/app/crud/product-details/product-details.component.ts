@@ -11,6 +11,6 @@ export class ProductDetailsComponent {
   
   constructor( private crudService : CrudService){
 
-  }
+}
 
 }

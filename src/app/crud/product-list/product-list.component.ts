@@ -30,7 +30,7 @@ export class ProductListComponent {
     ];
 
     constructor( private crudService : CrudService){
-
+ 
     }
 
   
