@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { AgGridAngular } from 'ag-grid-angular';
 import { CellClickedEvent, ColDef, GridReadyEvent } from 'ag-grid-community';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
@@ -12,25 +13,125 @@ import { Observable } from 'rxjs';
 })
 export class ProductListComponent {
  
-  OnInit():void{
-
-  }
+ 
 
     // Each Column Definition results in one Column.
-    public columnDefs: ColDef[] = [
-      { field: 'make'},
-      { field: 'model'},
-      { field: 'price' }
+    public columnDefs: ColDef[] = [ 
+      { 
+        field: 'p_name', 
+        headerName: 'Name', 
+        sortable: true,
+        headerClass: 'header-cell',
+      },
+      { 
+        field: 'p_description', 
+        headerName: 'Description', 
+        sortable: true,
+        headerClass: 'header-cell', 
+      },
+      { 
+        field: 'p_price', 
+        headerName: 'Price', 
+        sortable: true,
+        headerClass: 'header-cell', 
+        cellRenderer: this.priceCellRender.bind(this)
+      },
+      { 
+        field: '', 
+        headerName: 'Actions',  
+        headerClass: 'header-cell',
+        width: 240,
+        cellRenderer: this.actionRender.bind(this)
+      },
     ];
 
-    rowData = [
-      { make: 'Toyota', model: 'Celica', price: 3500},
-      { make: 'Ford', model: 'Mondeo', price: 3200},
-      { make: 'Porsche', model: 'Boxter', price: 7200},
-    ];
+    rowData: any = [ ];
+    gridOptions = {
+      rowHeight: 50
+    }
 
-    constructor( private crudService : CrudService){
+    productList: any = [];
+    productListSubscribe: any;
+
+    OnInit():void{
  
+      this.getProductList(); 
+    }
+
+    actionRender(params: any){
+      let div = document.createElement('div');
+      let htmlCode = '<button type="button" class="btn btn-success" data-toggle="collapse">View</button>\n ' +
+      '<button type="button" class="btn btn-danger" >Delete</button>' + 
+      '<button type="button" class="btn btn-warning" >Edit</button>';
+
+      div.innerHTML = htmlCode;
+
+      //handle view button
+      let viewButton =  div.querySelector('.btn-success');
+      // @ts-ignore
+      viewButton.addEventListener('click', () =>{
+        this.viewProductDetails(params);
+      })
+
+      
+      //handle edit button
+      let editButton =  div.querySelector('.btn-warning');
+      // @ts-ignore
+      editButton.addEventListener('click', () =>{
+        this.editProductDetails(params);
+      })
+
+      
+      //handle view button
+      let deleteButton =  div.querySelector('.btn-danger');
+      // @ts-ignore
+      deleteButton.addEventListener('click', () =>{
+        this.deleteProductDetails(params);
+      })
+
+      
+      return div;
+    }
+
+    viewProductDetails(params: any){
+      this.router.navigate(['/crud/view-product-details/' + params.data.p_id]);
+     
+    }
+    editProductDetails(params: any){
+      this.router.navigate(['/crud/update-product/' + params.data.p_id]);
+     
+    }
+    deleteProductDetails(params: any){
+
+      this.crudService.deleteProduct(params.data.p_id).subscribe(res => {
+        if(res.result === 'success')
+        this.getProductList();
+      })  
+      
+    }
+
+    priceCellRender(params: any){
+      return '$ ' + params.data.p_price;
+
+    }
+
+    getProductList(){
+      this.productListSubscribe = this.crudService.loadProducts().subscribe(res => {
+
+      this.productList = res; 
+      this.rowData = res;
+
+      console.log('res', res);
+
+      });
+      
+    }
+
+    constructor( private crudService : CrudService,
+      private router: Router)
+    {
+
+       this.OnInit();
     }
 
   

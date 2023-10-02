@@ -3,22 +3,75 @@
     <div class="row">
         <div class="col-6 p-5">
     
-            <form class="mb-3">
+            <form class="mb-3" [formGroup]="productForm" (ngSubmit)="createProduct(productForm.value)">
                 <div class="form-group">
                   <label for="product-name">Product name</label>
-                  <input type="email" class="form-control" id="product-name" aria-describedby="emailHelp" placeholder="Enter email">
-                  <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                  <input 
+                  formControlName="name" 
+                  type="text" 
+                  class="form-control" 
+                  id="product-name"
+                  [ngClass]="{
+                    'is-invalid': productForm.controls['name'].errors && productForm.controls['name'].touched,
+                    'is-valid': !productForm.controls['name'].errors  
+                  }"
+                  >
+                  <div class="alert alert-danger" role="alert" 
+                  *ngIf="productForm.controls['name'].errors && productForm.controls['name'].touched">
+  
+                  <span *ngIf="productForm.controls['name'].errors?.['required']"> Product name required.</span>
+                  <span *ngIf="productForm.controls['name'].errors?.['minlength']"> Product name must contains 3 char length.</span>
+                  <span *ngIf="productForm.controls['name'].errors?.['maxlength']"> Product name with in 50 char length.</span>
+
+                  </div>
                 </div>
                 <div class="form-group">
-                  <label for="product-desc">Description</label>
-                  <input type="text" class="form-control" id="product-desc" placeholder="text">
+                  <label for="product-desc">Product Desc</label>
+                  <br>
+                  <textarea 
+                  formControlName="description" 
+                  rows="5" 
+                  class="border rounded-1"
+                  style="width: 100%;" 
+                  id="product-desc" 
+                  [ngClass]="{
+                    'is-invalid': productForm.controls['description'].errors && productForm.controls['description'].touched,
+                    'is-valid': !productForm.controls['description'].errors  
+                  }"
+                  ></textarea>
+                  <div class="alert alert-danger" role="alert" 
+                  *ngIf="productForm.controls['description'].errors && productForm.controls['description'].touched">
+  
+                  <span *ngIf="productForm.controls['description'].errors?.['required']"> Product description required.</span>
+                  <span *ngIf="productForm.controls['description'].errors?.['minlength']"> Product description must contains 3 char length.</span>
+                  <span *ngIf="productForm.controls['description'].errors?.['maxlength']"> Product description with in 500 char length.</span>
+
+                  </div>
                 </div>
                 <div class="form-group">
-                  <label for="product-price">Price</label>
-                  <input type="text" class="form-control" id="product-price" placeholder="text">
+                  <label for="product-price">Product Price</label>
+                  <input 
+                  formControlName="price" 
+                  type="text" 
+                  class="form-control" 
+                  id="product-price" 
+                  placeholder="text"
+                  [ngClass]="{
+                    'is-invalid': productForm.controls['price'].errors && productForm.controls['price'].touched,
+                    'is-valid': !productForm.controls['price'].errors  
+                  }"
+                  >
+                  <div class="alert alert-danger" role="alert" 
+                  *ngIf="productForm.controls['price'].errors && productForm.controls['price'].touched">
+  
+                  <span *ngIf="productForm.controls['price'].errors?.['required']"> Product price required.</span>
+                  <span *ngIf="productForm.controls['price'].errors?.['minlength']"> Product price must contains 1 char length.</span>
+                  <span *ngIf="productForm.controls['price'].errors?.['maxlength']"> Product price with in 8 char length.</span>
+
+                  </div>
                 </div> 
-                <button type="submit" class="btn btn-primary mt-2 ">Create product</button>
-              </form>
+                <button type="submit" class="btn btn-primary mt-2 ">{{buttonText}}</button>
+            </form>
               
         </div>
     </div>

@@ -10,3 +10,14 @@ html, body {
     box-sizing: border-box;
     -webkit-overflow-scrolling: touch;
 }*/
+
+.header-cell{
+
+    background-color: #009879;
+    color: white;
+    text-align: left;
+
+    &:hover{
+        background-color:#00987ad6!important; 
+    }
+}
